@@ -39,7 +39,6 @@ class _ScreenShotState extends State<ScreenShot> {
     NaturalLanguage languageSystem = await LanguageSystem().getSystemLang();
     setState(() {
       languagePicker = languagePicker.copyWith(
-        //disabled: [NaturalLanguage.fromCodeShort('AA')],
         chosen: [languageSystem],
       );
     });

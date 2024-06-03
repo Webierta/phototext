@@ -8,44 +8,52 @@ import 'package:world_countries/world_countries.dart';
 import '../styles/styles.dart';
 import '../utils/idioma.dart';
 import '../utils/idioma_provider.dart';
+import '../utils/shared_prefs.dart';
 
 class ScreenSettings extends StatefulWidget {
   const ScreenSettings({super.key});
-
   @override
   State<ScreenSettings> createState() => _ScreenSettingsState();
 }
 
 class _ScreenSettingsState extends State<ScreenSettings> {
   late LanguagePicker languagePicker;
+
   NaturalLanguage get appLang =>
       languagePicker.chosen?.firstOrNull ?? NaturalLanguage.fromCodeShort('EN');
 
+  getAppLang() async {
+    final SharedPrefs sharedPrefs = SharedPrefs();
+    await sharedPrefs.init();
+    String? code = sharedPrefs.codeAppLang ?? 'EN';
+    setState(() {
+      languagePicker = languagePicker
+          .copyWith(chosen: [NaturalLanguage.fromCodeShort(code)]);
+    });
+  }
+
   @override
   void initState() {
-    languagePicker =
-        LanguagePicker(languages: Idioma.locales).copyWith(onSelect: onSelect);
+    languagePicker = LanguagePicker(languages: Idioma.locales)
+        .copyWith(onSelect: onSelect, showSearchBar: false);
+    getAppLang();
     super.initState();
   }
 
   void onSelect(NaturalLanguage newLang) {
-    languagePicker = languagePicker.copyWith(
-      chosen: appLang == newLang ? const [] : [newLang],
-    );
     context.read<IdiomaProvider>().setAppLanguage(newLang);
-
-    /* setState(() {
+    setState(() {
       languagePicker = languagePicker.copyWith(
-        chosen: selectedLang == newLang ? const [] : [newLang],
+        chosen: [newLang],
       );
-    }); */
+    });
   }
 
   void selectAppLanguage() {
     unawaited(
       //languagePicker.showInModalBottomSheet(context),
-      //languagePicker.showInDialog(context),
-      languagePicker.showInSearch(context),
+      languagePicker.showInDialog(context),
+      //languagePicker.showInSearch(context),
     );
   }
 
@@ -54,8 +62,6 @@ class _ScreenSettingsState extends State<ScreenSettings> {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     List<NaturalLanguage> idiomas = Idioma.locales;
     debugPrint('${idiomas.first.name}  ${idiomas.last.name}');
-
-    //IdiomaProvider idiomaProvider = Provider.of<IdiomaProvider>(context);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -82,7 +88,8 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                         ),
                         title: Text(l10n.appLanguage),
                         subtitle: Text(
-                            context.watch<IdiomaProvider>().appLanguage.name),
+                          context.watch<IdiomaProvider>().appLanguage.name,
+                        ),
                       ),
                     ],
                   ),
