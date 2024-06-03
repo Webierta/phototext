@@ -1,8 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const MainApp());
+import 'screens/screen_shot.dart';
+import 'utils/idioma_provider.dart';
+import 'utils/shared_prefs.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final SharedPrefs sharedPrefs = SharedPrefs();
+  await sharedPrefs.init();
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => IdiomaProvider()),
+      ],
+      child: const MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {
@@ -15,6 +30,9 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
+      locale: Locale(
+        context.watch<IdiomaProvider>().appLanguage.codeShort.toLowerCase(),
+      ),
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
@@ -22,11 +40,7 @@ class MainApp extends StatelessWidget {
           brightness: Brightness.dark,
         ),
       ),
-      home: const Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+      home: const ScreenShot(),
     );
   }
 }
