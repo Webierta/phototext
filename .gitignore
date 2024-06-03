@@ -1,6 +1,18 @@
 # Created by https://www.toptal.com/developers/gitignore/api/flutter,android
 # Edit at https://www.toptal.com/developers/gitignore?templates=flutter,android
 
+# Miscellaneous
+*.class
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+
 ### Android ###
 # Gradle files
 .gradle/
@@ -21,10 +33,28 @@ output.json
 
 # IntelliJ
 *.iml
+*.ipr
+*.iws
 .idea/
 misc.xml
 deploymentTargetDropDown.xml
 render.experimental.xml
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
 
 # Keystore files
 *.jks
@@ -52,6 +82,8 @@ gen-external-apklibs
 .packages
 .pub-cache/
 .pub/
+/build/
+
 coverage/
 lib/generated_plugin_registrant.dart
 # For library packages, don’t commit the pubspec.lock file.
